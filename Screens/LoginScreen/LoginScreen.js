@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {Text,View,ImageBackground, TouchableOpacity,
-   Platform,
-   KeyboardAvoidingView,
-   Keyboard,
-   TouchableWithoutFeedback,
-   Dimensions,
+import {
+   Text, View, ImageBackground, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions,
 } from 'react-native';
 import Input from '../../Components/Input/Input';
 import { styles } from './LoginScreen.styled';
@@ -68,7 +64,6 @@ const LoginScreen = () => {
                      >
                         {({
                            handleChange,
-                           handleBlur,
                            handleSubmit,
                            values,
                            errors,
@@ -135,8 +130,6 @@ const LoginScreen = () => {
                                     >
                                        <Text style={styles.btnTitle}>Увійти</Text>
                                     </TouchableOpacity>
-
-
                                     <Text style={styles.linkText}>
                                        Немає акаунта? Зареєструватися
                                     </Text>
