@@ -1,190 +1,199 @@
 import React, { useState, useEffect } from 'react';
 import {
-   Text, View, Image, ImageBackground, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions,
+  Text,
+  View,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Platform,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
 import Input from '../../Components/Input/Input';
+import ButtonSubmit from '../../Components/ButtonSubmit/ButtonSubmit';
+import { styles } from './RegistrationScreen.styled';
 import { Formik } from 'formik';
 import { registrationValidationSchema } from './registrationValidationSchema';
-import { styles } from './RegistrationScreen.styled';
 
+const RegistrationScreen = ({ navigation }) => {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
+  const [login, setLogin] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isHidePassword, setIsHidePassword] = useState(true);
 
-const RegistrationScreen = () => {
-   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [dimensions, setDimension] = useState(Dimensions.get('window').width);
 
-   const [login, setLogin] = useState('');
-   const [email, setEmail] = useState('');
-   const [password, setPassword] = useState('');
-   const [isHidePassword, setIsHidePassword] = useState(true);
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
 
-   const [dimensions, setDimension] = useState(Dimensions.get('window').width);
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get('window').width;
+      setDimension(width);
+    };
+    Dimensions.addEventListener('change', onChange);
+    return () => {
+      Dimensions.removeEventListener?.('change', onChange);
+    };
+  }, []);
 
-   const keyboardHide = () => {
-      setIsShowKeyboard(false);
-      Keyboard.dismiss();
-   };
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidHide', () => {
+      keyboardHide();
+    });
+    return () => {
+      Keyboard.removeAllListeners('keyboardDidHide');
+    };
+  }, [keyboardHide]);
 
-   useEffect(() => {
-      const onChange = () => {
-         const width = Dimensions.get('window').width;
-         setDimension(width);
-      };
-      Dimensions.addEventListener('change', onChange);
-      return () => {
-         Dimensions.removeEventListener?.('change', onChange);
-      };
-   }, []);
+  const toggleShowPassword = () => {
+    setIsHidePassword(prev => !prev);
+  };
 
-   useEffect(() => {
-      Keyboard.addListener('keyboardHide', () => {
-         keyboardHide();
-      });
-      return () => {
-         Keyboard.removeAllListeners('keyboardHide');
-      };
-   }, [keyboardHide]);
+  return (
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.image}
+          source={require('../../assets/images/mountain.jpg')}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS == 'ios' ? 'padding' : ''}
+          >
+            <View style={styles.wrapper}>
+              <View style={styles.userPhoto}>
+                <TouchableOpacity
+                  style={styles.btnAdd}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    console.log('add photo');
+                  }}
+                >
+                  <Image
+                    source={require('../../assets/images/Union.png')}
+                    style={styles.addIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.headerTitle}>Реєстрація</Text>
+              <Formik
+                validationSchema={registrationValidationSchema}
+                initialValues={{ login: '', email: '', password: '' }}
+                onSubmit={values => {
+                  keyboardHide();
+                  console.log(values);
+                }}
+              >
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                }) => (
+                  <View
+                    style={{
+                      ...styles.form,
+                      paddingBottom: isShowKeyboard ? 32 : 78,
+                      width: dimensions,
+                    }}
+                  >
+                    <View
+                      style={{
+                        position: 'relative',
+                      }}
+                    >
+                      <Input
+                        name="login"
+                        placeholder={'Логін'}
+                        onFocus={() => setIsShowKeyboard(true)}
+                        value={values.login}
+                        onChangeText={handleChange('login')}
+                      />
+                      {touched.login && errors.login && (
+                        <Text style={styles.errorText}>{errors.login}</Text>
+                      )}
+                    </View>
+                    <View
+                      style={{
+                        position: 'relative',
+                      }}
+                    >
+                      <Input
+                        name="email"
+                        placeholder="Адреса електронної пошти"
+                        stylesProp={{ marginTop: 16 }}
+                        onFocus={() => setIsShowKeyboard(true)}
+                        value={values.email}
+                        onChangeText={handleChange('email')}
+                      />
+                      {touched.email && errors.email && (
+                        <Text style={styles.errorText}>{errors.email}</Text>
+                      )}
+                    </View>
 
-   const toggleShowPassword = () => {
-      setIsHidePassword(prev => !prev);
-   };
+                    <View
+                      style={{
+                        position: 'relative',
+                      }}
+                    >
+                      <Input
+                        name="password"
+                        placeholder={'Пароль'}
+                        stylesProp={{ marginTop: 16 }}
+                        onFocus={() => setIsShowKeyboard(true)}
+                        value={values.password}
+                        onChangeText={handleChange('password')}
+                        secureTextEntry={isHidePassword}
+                      />
 
-   return (
-      <TouchableWithoutFeedback onPress={keyboardHide}>
-         <View style={styles.container}>
-            <ImageBackground
-               style={styles.image}
-               source={require('../../assets/images/mountain.jpg')}
-            >
-               <KeyboardAvoidingView
-                  behavior={Platform.OS == 'ios' ? 'padding' : ''}
-               >
-                  <View style={styles.wrapper}>
-                     <View style={styles.userPhoto}>
-                        <TouchableOpacity
-                           style={styles.btnAdd}
-                           activeOpacity={0.7}
-                           onPress={() => {
-                              console.log('add photo');
-                           }}
-                        >
-                           <Image
-                              source={require('../../assets/images/Union.png')}
-                              style={styles.addIcon}
-                           />
-                        </TouchableOpacity>
-                     </View>
-                     <Text style={styles.headerTitle}>Реєстрація</Text>
-                     <Formik
-                        validationSchema={registrationValidationSchema}
-                        initialValues={{ login: '', email: '', password: '' }}
-                        onSubmit={values => {
-                           keyboardHide();
-                           console.log(values);
-                        }}
-                     >
-                        {({
-                           handleChange,
-                           handleBlur,
-                           handleSubmit,
-                           handleReset,
-                           values,
-                           errors,
-                           touched,
-                        }) => (
-                           <View
-                              style={{
-                                 ...styles.form,
-                                 paddingBottom: isShowKeyboard ? 32 : 78,
-                                 width: dimensions,
-                              }}
-                           >
-                              <View
-                                 style={{
-                                    position: 'relative',
-                                 }}
-                              >
-                                 <Input
-                                    name="login"
-                                    placeholder={'Логін'}
-                                    onFocus={() => setIsShowKeyboard(true)}
-                                    value={values.login}
-                                    onChangeText={handleChange('login')}
-                                 />
-                                 {touched.login && errors.login && (
-                                    <Text style={styles.errorText}>{errors.login}</Text>
-                                 )}
-                              </View>
-                              <View
-                                 style={{
-                                    position: 'relative',
-                                 }}
-                              >
-                                 <Input
-                                    name="email"
-                                    placeholder="Адреса електронної пошти"
-                                    stylesProp={{ marginTop: 16 }}
-                                    onFocus={() => setIsShowKeyboard(true)}
-                                    value={values.email}
-                                    onChangeText={handleChange('email')}
-                                 />
-                                 {touched.email && errors.email && (
-                                    <Text style={styles.errorText}>{errors.email}</Text>
-                                 )}
-                              </View>
+                      <TouchableOpacity
+                        style={styles.btnShowPassword}
+                        onPress={toggleShowPassword}
+                        activeOpacity={0.7}
+                      >
+                        <Text style={styles.btnShowPasswordText}>
+                          {isHidePassword ? 'Показати' : 'Приховати'}
+                        </Text>
+                      </TouchableOpacity>
+                      {touched.password && errors.password && (
+                        <Text style={styles.errorText}>{errors.password}</Text>
+                      )}
+                    </View>
 
-                              <View
-                                 style={{
-                                    position: 'relative',
-                                 }}
-                              >
-                                 <Input
-                                    name="password"
-                                    placeholder={'Пароль'}
-                                    stylesProp={{ marginTop: 16 }}
-                                    onFocus={() => setIsShowKeyboard(true)}
-                                    value={values.password}
-                                    onChangeText={handleChange('password')}
-                                    secureTextEntry={isHidePassword}
-                                 />
-
-                                 <TouchableOpacity
-                                    style={styles.btnShowPassword}
-                                    onPress={toggleShowPassword}
-                                    activeOpacity={0.7}
-                                 >
-                                    <Text style={styles.btnShowPasswordText}>
-                                       {isHidePassword ? 'Показати' : 'Приховати'}
-                                    </Text>
-                                 </TouchableOpacity>
-                                 {touched.password && errors.password && (
-                                    <Text style={styles.errorText}>{errors.password}</Text>
-                                 )}
-                              </View>
-
-                              {!isShowKeyboard && (
-                                 <View>
-                                    <TouchableOpacity
-                                       activeOpacity={0.8}
-                                       style={styles.btn}
-                                       onPress={handleSubmit}
-                                    >
-                                       <Text style={styles.btnTitle}>Реєстрація</Text>
-                                    </TouchableOpacity>
-                                    <Text style={styles.linkText}>
-                                       Вже є акаунт? Увійти
-                                    </Text>
-                                 </View>
-                              )}
-                           </View>
-                        )}
-                     </Formik>
+                    {!isShowKeyboard && (
+                      <View>
+                        <ButtonSubmit
+                          title={'Зареєструватися'}
+                          onPress={handleSubmit}
+                        />
+                        <Text style={styles.linkText}>
+                          Вже є акаунт?{' '}
+                          <Text
+                            onPress={() => navigation.navigate('Login')}
+                            style={styles.linkText}
+                          >
+                            Увійти
+                          </Text>
+                        </Text>
+                      </View>
+                    )}
                   </View>
-               </KeyboardAvoidingView>
-            </ImageBackground>
-         </View>
-      </TouchableWithoutFeedback>
-   );
+                )}
+              </Formik>
+            </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
+  );
 };
-
 
 export default RegistrationScreen;
