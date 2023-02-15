@@ -1,6 +1,7 @@
 import React from 'react';
-
 import { createStackNavigator } from '@react-navigation/stack';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/auth/authOperations';
 import DefaultScreenPosts from '../../nestedScreens/DafaultScreenPosts/DefaultScreenPosts';
 import CommentsScreen from '../../nestedScreens/CommentsScreen/CommentsScreen';
 import MapScreen from '../../nestedScreens/MapScreen/MapScreen';
@@ -8,6 +9,7 @@ import { Feather } from '@expo/vector-icons';
 const NestedScreen = createStackNavigator();
 
 const PostsScreen = () => {
+  const dispatch = useDispatch();
   return (
     <NestedScreen.Navigator
       initialRouteName="NestedScreen"
@@ -46,7 +48,7 @@ const PostsScreen = () => {
               size={24}
               style={{ marginRight: 10 }}
               onPress={() => {
-                console.log('logout');
+                dispatch(logout());
               }}
             />
           ),
@@ -63,9 +65,23 @@ const PostsScreen = () => {
             fontSize: 17,
             lineHeight: 22,
           },
+          tabBarStyle: { display: 'none' },
         }}
       />
-      <NestedScreen.Screen name="Map" component={MapScreen} />
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          title: 'Карта',
+          headerTitleStyle: {
+            fontFamily: 'Roboto-Medium',
+            color: '#212121',
+            fontSize: 17,
+            lineHeight: 22,
+          },
+          tabBarStyle: { display: 'none' },
+        }}
+      />
     </NestedScreen.Navigator>
   );
 };

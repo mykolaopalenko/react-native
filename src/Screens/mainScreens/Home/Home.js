@@ -28,8 +28,9 @@ const Home = ({ navigation }) => {
         tabBarOptions: {
           tabBarHideOnKeyboard: true,
         },
+        tabBarShowLabel: false,
+       
       }}
-      tabBarOptions={{ showLabel: false }}
     >
       <MainTab.Screen
         options={{
