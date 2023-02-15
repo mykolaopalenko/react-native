@@ -69,7 +69,7 @@ const RegistrationScreen = ({ navigation }) => {
          <View style={styles.container}>
             <ImageBackground
                style={styles.image}
-               source={require('../../../assets/images/mountain.jpg')}
+               source={require('../../../../assets/images/mountain.jpg')}
             >
                <KeyboardAvoidingView
                   behavior={Platform.OS == 'ios' ? 'padding' : ''}
@@ -85,7 +85,7 @@ const RegistrationScreen = ({ navigation }) => {
                            onPress={uploadAvatarToServer}
                         >
                            <Image
-                              source={require('../../../assets/images/Union.png')}
+                              source={require('../../../../assets/images/Union.png')}
                               style={styles.addIcon}
                            />
                         </TouchableOpacity>

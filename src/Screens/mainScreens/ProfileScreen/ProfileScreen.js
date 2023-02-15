@@ -66,7 +66,7 @@ const ProfileScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ImageBackground
         style={styles.image}
-        source={require('../../../assets/images/mountain.jpg')}
+        source={require('../../../../assets/images/mountain.jpg')}
       >
         <View style={styles.wrapper}>
           <View style={styles.logoutBtn}>
@@ -89,7 +89,7 @@ const ProfileScreen = ({ navigation }) => {
                   onPress={removeAvatar}
                 >
                   <Image
-                    source={require('../../../assets/images/remove.png')}
+                    source={require('./../../../../assets/images/remove.png')}
                     style={styles.addIcon}
                   />
                 </TouchableOpacity>
@@ -102,7 +102,7 @@ const ProfileScreen = ({ navigation }) => {
                   onPress={updateAvatar}
                 >
                   <Image
-                    source={require('../../../assets/images/Union.png')}
+                    source={require('./../../../../assets/images/Union.png')}
                     style={styles.addIcon}
                   />
                 </TouchableOpacity>
